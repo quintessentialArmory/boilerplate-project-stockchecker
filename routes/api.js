@@ -104,10 +104,10 @@ module.exports = async function (app, done) {
       const price = await getPrice(stock);
       if (price !== null) {
         try {
-          const update = {
-            $set: { price },
-            $addToSet: { liked_by: getIP(req) },
-          };
+          const update = { $set: { price } };
+          if (req.query.like === 'true') {
+            update.$addToSet = { liked_by: getIP(req) };
+          }
           collection.updateOne({ stock }, update);
         } catch (error) {
           console.error(error);
